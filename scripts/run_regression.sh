@@ -9,7 +9,7 @@ ROOT=$(cd "$SCRIPTDIR/.." && pwd)
 export PYTHONPATH="$ROOT"
 
 echo "Starting regression runner"
-"$SCRIPTDIR/regression_run_presets.sh"
+bash "$SCRIPTDIR/regression_run_presets.sh"
 
 echo "Comparing backtest reports to golden traces"
 # Non-fatal comparisons (do not fail the whole run here)
