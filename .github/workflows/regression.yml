@@ -1,38 +1,39 @@
 name: Regression
 
 on:
-push:
-branches: [ main ]
-pull_request:
-branches: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-run-regression:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout
-uses: actions/checkout@v4
+  run-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Set up Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: '3.11'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-  - name: Install dependencies (none required currently)
-    run: |
-      python -V
-      pip --version
+      - name: Verify Python + pip
+        run: |
+          python --version
+          python -m pip --version
 
-  - name: Run regression script
-    env:
-      PYTHONPATH: ${{ github.workspace }}
-    run: |
-      chmod +x ./scripts/run_regression.sh || true
-      ./scripts/run_regression.sh
+      - name: Run regression runner
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          chmod +x ./scripts/run_regression.sh
+          ./scripts/run_regression.sh
 
-  - name: Upload artifacts on failure
-    if: failure()
-    uses: actions/upload-artifact@v4
-    with:
-      name: regression-artifacts
-      path: artifacts/
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-on-failure
+          path: artifacts/
+          if-no-files-found: ignore
